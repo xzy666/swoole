@@ -31,7 +31,7 @@ class Active
 		foreach ($this->process_list as $process) {
 			swoole_event_add($process, function ($pipe) use ($process) {
 				$data = $process->read();
-				var_dump($data."--------11111----");
+				var_dump($data . "--------11111----");
 				$this->process_use[$data] = 0;
 			});
 		}
@@ -63,7 +63,7 @@ class Active
 				// 绑定子进程管道的读事件
 				swoole_event_add($process, function ($pipe) use ($process) {
 					$data = $process->read();
-					var_dump($data."--------2222----");
+					var_dump($data . "--------2222----");
 					$this->process_use[$data] = 0;
 				});
 			}
@@ -78,14 +78,14 @@ class Active
 		});
 
 	}
+
 	public function task_run($worker)
 	{
 		// 注册监听管道的事件，接收任务
-		swoole_event_add($worker->pipe, function ($pipe) use ($worker){
+		swoole_event_add($worker->pipe, function ($pipe) use ($worker) {
 			$data = $worker->read();
 			var_dump($worker->pid . ": " . $data);
-			if($data == 'exit')
-			{
+			if ($data == 'exit') {
 				// 收到退出指令，关闭子进程
 				$worker->exit();
 				exit;
@@ -98,10 +98,11 @@ class Active
 	}
 
 }
+
 new Active();
 // 注册信号，回收退出的子进程
-swoole_process::signal(SIGCHLD, function($sig) {
-	while($ret =  swoole_process::wait(false)) {
+swoole_process::signal(SIGCHLD, function ($sig) {
+	while ($ret = swoole_process::wait(false)) {
 		echo "PID={$ret['pid']}\n";
 	}
 });
